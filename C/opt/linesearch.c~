@@ -1,0 +1,33 @@
+#include "opt.h"
+
+/*
+line search routine
+*/
+double* linesearch(int n,double *x0,double (*f)(double*,void*),double* (*g)(double*,void*),cs_di* (*h)(double*,void*),void* data)
+{
+	//check inputs
+	if(!(x0&&f&&g&&g)return NULL;
+	
+	//declare variables
+	int i=0,is_zero=1;
+	double a=1.0,*p,f1,f2,*g1,*g2;
+	cs_di* H;
+	
+	/*
+	perform initial function and gradient evaluations. if the gradient is already
+	zero, we're done.
+	*/
+	f1=f(x0,data);
+	g1=g(x0,data);
+	for(i=0;i<n;i++)if(g1[i]>EPS)is_zero=0;
+	if(is_zero)return x0;
+	
+	/*
+	otherwise begin the linesearch
+	*/
+	while(!is_zero)
+	{
+	
+	}
+}
+

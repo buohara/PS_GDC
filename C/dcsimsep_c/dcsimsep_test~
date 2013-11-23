@@ -1,0 +1,13 @@
+echo "Running case 6"
+./dcsimsep_debug -f ../ps_files/case6_ps.psc > test/dcsimsep_test.log
+
+echo "Running case 30"
+./dcsimsep_debug -f ../ps_files/case30_ps.psc >> test/dcsimsep_test.log
+
+echo "Running case 300"
+./dcsimsep_debug -f ../ps_files/case300_ps.psc >> test/dcsimsep_test.log
+
+echo "Running case 2383"
+./dcsimsep_debug -f ../ps_files/case2383_ps.psc >> test/dcsimsep_test.log
+
+echo "Output written to test/dcsimsep_test.log"

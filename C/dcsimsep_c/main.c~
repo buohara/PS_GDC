@@ -1,0 +1,95 @@
+#include "ps.h"
+
+/*
+print command line flag usage
+*/
+void Usage(void)
+{
+	printf("Usage:\n");
+	printf(" -f <mesh_file_name>\n");
+	exit(8);
+}
+
+//test program
+int main(int argc,char** argv)
+{	
+	char ps_file[256]={0},ps_name_f[256]={0};
+	PS *ps;
+	BRANCH *branches;
+	int i,ncmpt,nbus;
+	cs_di **bbuses;
+	double *vang;
+	
+	//Parse command line arguments
+	//if(!(argc%2))Usage();
+	while ((argc>1)&&(argv[1][0]=='-')){		
+		switch (argv[1][1]){
+			case 'f':
+				strcpy(ps_file,&argv[2][0]);
+				argv+=2;
+				argc-=2;
+				break;
+			case 'h':
+				Usage();
+			default:
+				printf("Unknown flag: %s\n", argv[1]);
+				Usage();
+		}
+	}
+	
+	printf("\n///////////////////////////////////////////////////////\n");
+	printf("RUNNING FILE %s...\n",ps_file);
+	printf("///////////////////////////////////////////////////////\n");
+	
+	//load up ps
+	ps=load_ps(ps_file);
+	if(!ps)exit(8);
+	vang=malloc(ps->nbus*sizeof(double));
+	
+	//knock out a few branches
+	/*
+	branches=ps->branches;
+	branches[0].status=0;
+	branches[1].status=0;
+	branches[2].status=0;
+	branches[3].status=0;
+	*/
+	
+	
+	//print some output
+	find_subgraphs(ps);
+	ps_print(ps,1);
+	printf("\nBus Locations:\n\n");
+	for(i=0;i<ps->nbus;i++){
+		printf("Bus %3d: loc %2d, ",ps->buses[i].id,ps->buses[i].area);
+		if(!((i+1)%7))printf("\n");
+	}
+	printf("\n");
+	
+	dcsimsep(ps);
+	printf("\nDCSIMSEP Results:\n\n");
+	for(i=0;i<ps->nbus;i++){
+		printf("Bus %3d Ang: %lg, ",ps->buses[i].id,ps->buses[i].vang);
+		if(!((i+1)%5))printf("\n");
+	}
+	printf("\n");
+	
+	bbuses=get_bbus(ps);
+	for(i=0;i<ps->narea;i++){
+		printf("\n");
+		cs_print(bbuses[i],1);
+		sprintf(ps_name_f,"test/case%d_matrix%d.txt",ps->nbus,i);
+		cs_fprint(bbuses[i],ps_name_f);
+		cs_spfree(bbuses[i]);
+	}
+	
+	for(i=0;i<ps->nbus;i++)vang[i]=ps->buses[i].vang;
+	sprintf(ps_name_f,"test/case%d_vang.txt",ps->nbus);
+	vec_fprint(vang,ps->nbus,ps_name_f);
+	
+	//clean up and return
+	ps_free(ps);
+	free(bbuses);
+	free(vang);
+	return 0;
+}
