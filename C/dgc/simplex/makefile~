@@ -1,0 +1,8 @@
+simplex: simplex.c
+	gcc -c simplex.c -o simplex.o -lm -lcxsparse
+
+smptest: simplex.c test.c
+	gcc simplex.c test.c -o smptest -lm -lcxsparse
+
+clean:
+	rm smptest

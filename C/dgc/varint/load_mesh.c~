@@ -1,0 +1,25 @@
+#include "varint.h"
+
+const int LoadMesh(const char* mesh_file,mesh* msh){
+
+	FILE *file;
+	char curr_line[256];
+
+	//check that a mesh was actually passed in
+	if(!msh) return -1;
+	
+	//try to open mesh file
+	file=fopen(mesh_file,"r");
+	if(!file) return -1;
+
+	//read the file
+	fgets(curr_line,256,file);
+	fgets(curr_line,256,file);
+	fgets(curr_line,256,file);
+
+	//close the mesh file
+	fclose(file);
+
+	//return
+	return 0;
+}
