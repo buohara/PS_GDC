@@ -1,9 +1,0 @@
-IN_FILE="$1"
-
-BEGIN="^"
-END="$"
-INT="\d"
-FLOAT="\d\.*\d*"
-
-BUS_PATTERN=$BEGIN $INT
-
