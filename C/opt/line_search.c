@@ -53,15 +53,16 @@ double line_search(const int n,const double *x0,const double *p,const OBJ_FUNC f
 		{
 			while(inner_iters<ITER_MAX)
 			{
+				printf("Voltage/Power:\n");
+				for(i=0;i<n;i++)printf("%lg ",x[i]);
+				printf("\nMismatch:\n");
+				for(i=0;i<n;i++)printf("%lg ",grad[i]);
+				printf("\n\n");
+			
 				//solve for minimum of cubic interpolant
 				at=min_cubic(a1,a2,f1,f2,g1,g2);
 				
-				/*
-				make sure at is in the bracket. if not, fall back to
-				bisection
-				*/
-				
-				printf("%lg %lg %lg\n%lg %lg %lg\n%lg %lg %lg\n\n",a1,at,a2,f1,ft,f2,g1,gt,g2);
+				printf("step: %lg %lg %lg\nf: %lg %lg %lg\ng: %lg %lg %lg\n\n",a1,at,a2,f1,ft,f2,g1,gt,g2);
 				
 				//move to trial point and evaluate f and g
 				add(n,x0,p,at,x);

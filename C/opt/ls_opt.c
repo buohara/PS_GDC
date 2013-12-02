@@ -38,9 +38,12 @@ double* ls_opt(const int n,const double* x0,const OBJ_FUNC f,const GRAD_FUNC g,c
 		*/
 		for(i=0;i<n;i++)p[i]=-grad[i];
 		
+		cs_print(hess,0);
+		
 		//perform linear solve for p
 		symb=klu_analyze(n,hess->p,hess->i,&common);
 		num=klu_factor(hess->p,hess->i,hess->x,symb,&common);
+		printf("%d\n",common.status);
 		klu_solve(symb,num,n,1,p,&common);
 		
 		//free up klu resources
@@ -59,8 +62,6 @@ double* ls_opt(const int n,const double* x0,const OBJ_FUNC f,const GRAD_FUNC g,c
 		for(i=0;i<n;i++)norm_p+=p[i]*p[i];
 		norm_p=1.0/sqrt(norm_p);
 		for(i=0;i<n;i++)p[i]*=norm_p;
-		
-		printf("x:%lg %lg\np:%lg %lg\ng:%lg %lg\n\n",x1[0],x1[1],p[0],p[1],grad[0],grad[1]);
 		
 		//perform line search to get step length
 		alpha=line_search(n,x1,p,f,g,data);

@@ -53,6 +53,11 @@ add two vectors using x_out=x1+alpha*x2
 */
 void add(const int n,const double* x1,const double* x2,double alpha,double* x_out);
 
+/*
+calculate a finite-difference derivative of a vector valued function
+*/
+cs_di* check_derivative(const int n,const GRAD_FUNC g,const double *x0,void* data);
+
 #ifdef __cplusplus
 }
 #endif
