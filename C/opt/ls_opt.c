@@ -7,7 +7,8 @@ double* ls_opt(const int n,const double* x0,const OBJ_FUNC f,const GRAD_FUNC g,c
 	
 	//initialize variables
 	int n_iters=0,ok,i;
-	double f1,f2,g0,alpha,norm_p,*x1=malloc(n*sizeof(double)),*x2=malloc(n*sizeof(double)),*grad=malloc(n*sizeof(double)),*p=malloc(n*sizeof(double)),*x_tmp;
+	double f1,f2,g0,alpha,norm_p,*x1=malloc(n*sizeof(double)),*x2=malloc(n*sizeof(double)),
+	*grad=malloc(n*sizeof(double)),*p=malloc(n*sizeof(double)),*x_tmp;
 	cs_di *hess=init_hess(x0,data);
 	klu_common common;
 	klu_symbolic *symb=NULL;
@@ -38,13 +39,11 @@ double* ls_opt(const int n,const double* x0,const OBJ_FUNC f,const GRAD_FUNC g,c
 		*/
 		for(i=0;i<n;i++)p[i]=-grad[i];
 		
-		cs_print(hess,0);
-		
 		//perform linear solve for p
 		symb=klu_analyze(n,hess->p,hess->i,&common);
 		num=klu_factor(hess->p,hess->i,hess->x,symb,&common);
-		printf("%d\n",common.status);
-		klu_solve(symb,num,n,1,p,&common);
+		if(!klu_solve(symb,num,n,1,p,&common))printf("KLU failed with code %d\n",common.status);
+		printf("KLU code %d\n",common.status);
 		
 		//free up klu resources
 		klu_free_symbolic(&symb,&common);
@@ -75,7 +74,8 @@ double* ls_opt(const int n,const double* x0,const OBJ_FUNC f,const GRAD_FUNC g,c
 		g(x2,grad,data);
 		x_tmp=x1;x1=x2;x2=x_tmp;
 		n_iters++;
-	}while(fabs(f2-f1)>EPS&&n_iters<ITER_MAX);
+	}
+	while(!is_zero(n,grad)&&n_iters<ITER_MAX);
 	
 	printf("Number of steps: %d\n",n_iters);
 	

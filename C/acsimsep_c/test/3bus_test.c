@@ -48,8 +48,8 @@ double* grad_func(const double* v,double* curr,void* data)
 		P=pq[2*i];
 		Q=pq[2*i+1];
 		fac=1.0/(vr*vr+vi*vi);
-		curr[2*i]=0.0;//-(P*vr+Q*vi)*fac;
-		curr[2*i+1]=0.0;//-(P*vi-Q*vr)*fac;
+		curr[2*i]=0.0-(P*vr+Q*vi)*fac;
+		curr[2*i+1]=0.0-(P*vi-Q*vr)*fac;
 	}
 	
 	//compute i=Yv-s
@@ -271,15 +271,15 @@ int main(int argc,char** argv)
 	PS_DATA data;
 
 	cs_ci *ytmp=cs_ci_spalloc(3,3,0,1,1);
-	cs_ci_entry(ytmp,0,0,15-36*I);
+	cs_ci_entry(ytmp,0,0,15-35*I);
 	cs_ci_entry(ytmp,0,1,-10+20*I);
 	cs_ci_entry(ytmp,0,2,-5+15*I);
 	cs_ci_entry(ytmp,1,0,-10+20*I);
-	cs_ci_entry(ytmp,1,1,30-63*I);
+	cs_ci_entry(ytmp,1,1,30-60*I);
 	cs_ci_entry(ytmp,1,2,-20+40*I);
 	cs_ci_entry(ytmp,2,0,-5+15*I);
 	cs_ci_entry(ytmp,2,1,-20+40*I);
-	cs_ci_entry(ytmp,2,2,25-56*I);
+	cs_ci_entry(ytmp,2,2,25-55*I);
 
 	data.pq=malloc(6*sizeof(double));
 	data.pq[0]=0.5;

@@ -15,4 +15,3 @@ $(OBJ):
 clean:
 	-rm 3bus_test
 	cd ../../opt && make clean
-	-rm *.o

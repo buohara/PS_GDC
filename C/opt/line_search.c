@@ -31,6 +31,7 @@ double line_search(const int n,const double *x0,const double *p,const OBJ_FUNC f
 		//evaluate f and g at new point
 		add(n,x0,p,a2,x);
 		f2=f(x,data);
+		
 		g(x,grad,data);
 		g2=dot(n,grad,p);
 		
@@ -62,7 +63,8 @@ double line_search(const int n,const double *x0,const double *p,const OBJ_FUNC f
 				//solve for minimum of cubic interpolant
 				at=min_cubic(a1,a2,f1,f2,g1,g2);
 				
-				printf("step: %lg %lg %lg\nf: %lg %lg %lg\ng: %lg %lg %lg\n\n",a1,at,a2,f1,ft,f2,g1,gt,g2);
+				//make sure we aren't taking steps that are too small
+				at=fmin(fmax(at,a1+(a2-a1)*1.5e-1),a2-(a2-a1)*1.5e-1);
 				
 				//move to trial point and evaluate f and g
 				add(n,x0,p,at,x);
@@ -70,15 +72,17 @@ double line_search(const int n,const double *x0,const double *p,const OBJ_FUNC f
 				g(x,grad,data);
 				gt=dot(n,grad,p);
 				
+				printf("step: %lg %lg %lg\nf: %lg %lg %lg\ng: %lg %lg %lg\n\n",a1,at,a2,f1,ft,f2,g1,gt,g2);
+				
 				//check wolfe conditions
-				if(ft<=f0+C1*g0&&fabs(gt)<=-C2*g0)
+				if(/*ft<=f0+C1*g0&&*/fabs(gt)<=-C2*g0)
 				{
 					free(grad);
 					free(x);
 					return at;
 				}
 				
-				//otherwise, adjust the bracket
+				//adjust bracket
 				if(gt>0){f2=ft;g2=gt;a2=at;}
 				else{f1=ft;g1=gt;a1=at;}
 				

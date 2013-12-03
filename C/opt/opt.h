@@ -8,8 +8,8 @@
 #include <suitesparse/cs.h>
 #include <suitesparse/klu.h>
 
-#define EPS 1e-6
-#define C1 1e-5
+#define EPS 1e-5
+#define C1 1e-4
 #define C2 0.9
 #define ITER_MAX 20
 #define ALPHA_MAX 10.0
